@@ -1,74 +1,109 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, View, Text, Image, TextInput, Button, SafeAreaView, Keyboard, TouchableWithoutFeedback } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialIcons'; // Importa la biblioteca de íconos
+import profileImageLocal from '../../assets/images/profile1.jpeg';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+export default function Index() {
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const user = {
+    name: 'Kenet Chungandro',
+    email: 'kenbok2018@gmail.com',
+    profileImage: profileImageLocal,
+  };
 
-export default function HomeScreen() {
+  const ProfileCard = ({ name, email }) => (
+    <View style={styles.profileCard}>
+      <View style={styles.row}>
+        <Icon name="person" size={24} color="gray" style={styles.icon} />
+        <Text style={styles.name}>{name}</Text>
+      </View>
+      <View style={styles.row}>
+        <Icon name="email" size={24} color="gray" style={styles.icon} />
+        <Text style={styles.email}>{email}</Text>
+      </View>
+    </View>
+  );
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12'
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <SafeAreaView style={styles.safeArea}>
+        <View style={styles.container}>
+          <Image source={user.profileImage} style={styles.profileImage} />
+          <ProfileCard name={user.name} email={user.email} />
+          <View style={styles.row}>
+            <TextInput
+              style={styles.input}
+              placeholder="Número de teléfono"
+              value={phoneNumber}
+              onChangeText={setPhoneNumber}
+              keyboardType="phone-pad"
+            />
+          </View>
+          <Button title="Guardar cambios" onPress={() => console.log('Cambios guardados:', phoneNumber)} />
+        </View>
+      </SafeAreaView>
+    </TouchableWithoutFeedback>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
+  safeArea: {
+    flex: 1,
+    backgroundColor: '#f4f4f4', // Asegura que el fondo cubra toda el área segura
+  },
+  container: {
+    flex: 1,
+    padding: 50,
+    alignItems: 'center', // Centra los elementos horizontalmente
+    justifyContent: 'center', // Centra el contenido verticalmente
+    backgroundColor: '#f4f4f4', // Un color de fondo claro
+  },
+  profileImage: {
+    width: '100%', // Ajusta el ancho al 100% del contenedor padre
+    height: 300,
+    borderTopLeftRadius: 20, 
+    borderTopRightRadius: 20, 
+
+    marginBottom: 5, // Espacio debajo de la imagen
+  },
+  profileCard: {
+    width: '100%', // Define un ancho consistente para el card
+    alignItems: 'center',
+    marginBottom: 20,
+    padding: 15,
+    backgroundColor: 'white',
+    borderBottomLeftRadius: 20, 
+    borderBottomRightRadius: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 2, // Sombra para Android (para iOS se usan las propiedades shadow*)
+  },
+  name: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  email: {
+    fontSize: 16,
+    color: 'gray',
+  },
+  input: {
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+    borderRadius: 5,
+    marginBottom: 20,
+    paddingHorizontal: 10,
+    width: '80%',
+  },
+  row: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    marginBottom: 10,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  icon: {
+    marginRight: 10,
   },
 });
